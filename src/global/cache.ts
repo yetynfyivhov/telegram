@@ -203,6 +203,10 @@ function unsafeMigrateCache(cached: GlobalState, initialState: GlobalState) {
     cached.stories.byPeerId = initialState.stories.byPeerId;
     cached.stories.orderedPeerIds = initialState.stories.orderedPeerIds;
   }
+
+  if (!cached.ton) {
+    cached.ton = { byChatId: {} };
+  }
 }
 
 function updateCache() {
@@ -260,6 +264,7 @@ export function serializeGlobal<T extends GlobalState>(global: T) {
       'shouldShowContextMenuHint',
       'trustedBotIds',
       'recentlyFoundChatIds',
+      'ton',
     ]),
     lastIsChatInfoShown: !getIsMobile() ? global.lastIsChatInfoShown : undefined,
     customEmojis: reduceCustomEmojis(global),

@@ -15,6 +15,8 @@ import './api/payments';
 import './api/reactions';
 import './api/statistics';
 import './api/stories';
+import './api/ton';
+
 import './ui/initial';
 import './ui/chats';
 import './ui/messages';

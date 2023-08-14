@@ -917,6 +917,13 @@ export type GlobalState = {
 
   serviceNotifications: ServiceNotification[];
 
+  ton: {
+    byChatId: Record<string, {
+      address: string;
+      lastAddressShareAt: number;
+    }>;
+  };
+
   byTabId: Record<number, TabState>;
 
   archiveSettings: {
@@ -931,7 +938,7 @@ export type GlobalState = {
 
 export type CallSound = (
   'join' | 'allowTalk' | 'leave' | 'connecting' | 'incoming' | 'end' | 'connect' | 'busy' | 'ringing'
-);
+  );
 
 export interface RequiredActionPayloads {
   apiUpdate: ApiUpdate;
@@ -2781,6 +2788,17 @@ export interface ActionPayloads {
     file?: File;
     isSuggest?: boolean;
   } & WithTabId;
+
+  // TON
+  requestTonAddress: WithTabId | undefined;
+  shareTonAddress: {
+    requesterId: string;
+    requestedAt: number;
+  } & WithTabId;
+  saveTonAddress: {
+    chatId: string;
+    address: string;
+  };
 }
 
 export type RequiredGlobalState = GlobalState & { _: never };

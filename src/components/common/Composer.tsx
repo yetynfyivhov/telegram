@@ -153,6 +153,8 @@ import Spinner from '../ui/Spinner';
 import Avatar from './Avatar';
 import DeleteMessageModal from './DeleteMessageModal.async';
 import ReactionAnimatedEmoji from './reactions/ReactionAnimatedEmoji';
+import ReactionStaticEmoji from './ReactionStaticEmoji';
+import TonModal from '../middle/composer/TonModal.async';
 
 import './Composer.scss';
 
@@ -404,6 +406,8 @@ const Composer: FC<OwnProps & StateProps> = ({
   useTimeout(() => {
     setIsMounted(true);
   }, MOUNT_ANIMATION_DURATION);
+
+  const [isTonModalOpen, openTonModal, closeTonModal] = useFlag();
 
   useEffect(() => {
     if (isInMessageList) return;
@@ -1515,6 +1519,11 @@ const Composer: FC<OwnProps & StateProps> = ({
         onClear={closePollModal}
         onSend={handlePollSend}
       />
+      <TonModal
+        isOpen={isTonModalOpen}
+        chatId={chatId}
+        onClear={closeTonModal}
+      />
       {renderedEditedMessage && (
         <DeleteMessageModal
           isOpen={isDeleteModalOpen}
@@ -1751,6 +1760,8 @@ const Composer: FC<OwnProps & StateProps> = ({
             theme={theme}
             onMenuOpen={onAttachMenuOpen}
             onMenuClose={onAttachMenuClose}
+            canSendTons={!isChatWithSelf && isUserId(chatId)}
+            onSendTons={openTonModal}
           />
           {isInMessageList && Boolean(botKeyboardMessageId) && (
             <BotKeyboardMenu
