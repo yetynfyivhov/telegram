@@ -214,6 +214,10 @@ function unsafeMigrateCache(cached: GlobalState, initialState: GlobalState) {
     untypedCached.appConfig.peerColors = undefined;
     untypedCached.appConfig.darkPeerColors = undefined;
   }
+
+  if (!cached.ton) {
+    cached.ton = { byChatId: {} };
+  }
 }
 
 function updateCache() {
@@ -272,6 +276,7 @@ export function serializeGlobal<T extends GlobalState>(global: T) {
       'trustedBotIds',
       'recentlyFoundChatIds',
       'peerColors',
+      'ton',
     ]),
     lastIsChatInfoShown: !getIsMobile() ? global.lastIsChatInfoShown : undefined,
     customEmojis: reduceCustomEmojis(global),

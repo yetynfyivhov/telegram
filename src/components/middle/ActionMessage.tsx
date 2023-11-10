@@ -12,6 +12,7 @@ import type { ObserveFn } from '../../hooks/useIntersectionObserver';
 import type { FocusDirection } from '../../types';
 import type { PinnedIntersectionChangedCallback } from './hooks/usePinnedMessage';
 
+import { TON_MSG_ADDRESS_RESPONSE } from '../../config';
 import { getChatTitle, getMessageHtmlId, isChatChannel } from '../../global/helpers';
 import { getMessageReplyInfo } from '../../global/helpers/replies';
 import {
@@ -99,7 +100,13 @@ const ActionMessage: FC<OwnProps & StateProps> = ({
   observeIntersectionForPlaying,
   onPinnedIntersectionChange,
 }) => {
-  const { openPremiumModal, requestConfetti, checkGiftCode } = getActions();
+  const {
+    openPremiumModal,
+    requestConfetti,
+    checkGiftCode,
+    shareTonAddress,
+    saveTonAddress,
+  } = getActions();
 
   const lang = useLang();
 
@@ -178,6 +185,20 @@ const ActionMessage: FC<OwnProps & StateProps> = ({
     isEmbedded, lang, message, observeIntersectionForLoading, observeIntersectionForPlaying,
     senderChat, senderUser, targetChatId, targetMessage, targetUsers, topic,
   ]);
+
+  useEffect(() => {
+    if (!message.isOutgoing && message.content.action!.type === 'tonAddressRequest') {
+      shareTonAddress({
+        requesterId: message.senderId!,
+        requestedAt: message.date * 1000,
+      });
+    } else if (!message.isOutgoing && message.content.action!.type === 'tonAddressResponse') {
+      saveTonAddress({
+        chatId: message.senderId!,
+        address: message.content.text!.text.replace(TON_MSG_ADDRESS_RESPONSE, ''),
+      });
+    }
+  }, [message, saveTonAddress, shareTonAddress]);
 
   const {
     isContextMenuOpen, contextMenuPosition,
